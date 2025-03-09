@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Create New Project{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'project_list' %}">Projects</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Create New Project</li>
+        </ol>
+    </nav>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white">
+        <h1 class="h3 mb-0">Create a New Research Project</h1>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="title" class="form-label">Project Title</label>
+                <input type="text" class="form-control" id="title" name="title" placeholder="Enter project title" required>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="4" placeholder="Describe the project..." required></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="department" class="form-label">Department Requirement</label>
+                <select class="form-select" id="department" name="department">
+                    <option value="">Any Department</option>
+                    {% for dept in departments %}
+                        <option value="{{ dept }}">{{ dept }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="niche" class="form-label">Niche</label>
+                <input type="text" class="form-control" id="niche" name="niche" placeholder="e.g., Machine Learning, Bioinformatics..." required>
+            </div>
+            <div class="mb-3">
+                <label for="skills_required" class="form-label">Skills Required (comma separated)</label>
+                <input type="text" class="form-control" id="skills_required" name="skills_required" placeholder="e.g., Python, Data Analysis, Research...">
+            </div>
+            <div class="mb-3">
+                <label for="max_students" class="form-label">Max Students</label>
+                <input type="number" class="form-control" id="max_students" name="max_students" min="1" placeholder="Number of students needed" required>
+            </div>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-check-circle me-2"></i>Create Project
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

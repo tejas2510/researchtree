@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Professor Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Welcome to Your Dashboard, Professor!</h1>
+    
+    <div class="row">
+        <!-- Active Projects Card -->
+        <div class="col-md-6 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="h5 mb-0">Your Active Projects</h2>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">Manage and view your current research projects.</p>
+                    <a href="/projects/" class="btn btn-primary">View Projects</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Collaborator Requests Card -->
+        <div class="col-md-6 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h2 class="h5 mb-0">Collaboration Requests</h2>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">Review pending collaboration requests from students.</p>
+                    <a href="/projects/collaborations/" class="btn btn-success">Manage Requests</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Profile Management Card -->
+        <div class="col-md-6 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h2 class="h5 mb-0">Manage Your Profile</h2>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">Update your profile information to stay visible to students.</p>
+                    <a href="/users/profile/edit/" class="btn btn-info">Edit Profile</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Research Opportunities Card -->
+        <div class="col-md-6 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-warning text-dark">
+                    <h2 class="h5 mb-0">Post Research Opportunities</h2>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">Create new opportunities for students to collaborate on your projects.</p>
+                    <a href="/projects/create/" class="btn btn-warning">Post Opportunity</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

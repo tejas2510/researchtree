@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Project - {{ project.title }}{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'project_list' %}">Projects</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Edit Project</li>
+        </ol>
+    </nav>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white">
+        <h1 class="h3 mb-0">Edit Project - {{ project.title }}</h1>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="title" class="form-label">Project Title</label>
+                <input type="text" class="form-control" id="title" name="title" value="{{ project.title }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="4" required>{{ project.description }}</textarea>
+            </div>
+            <div class="mb-3">
+                <label for="department" class="form-label">Department Requirement</label>
+                <select class="form-select" id="department" name="department">
+                    <option value="">Any Department</option>
+                    {% for dept in departments %}
+                        <option value="{{ dept }}" {% if project.department_requirement == dept %}selected{% endif %}>{{ dept }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="niche" class="form-label">Niche</label>
+                <input type="text" class="form-control" id="niche" name="niche" value="{{ project.niche }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="skills_required" class="form-label">Skills Required (comma separated)</label>
+                <input type="text" class="form-control" id="skills_required" name="skills_required" value="{{ project.skills_required }}">
+            </div>
+            <div class="mb-3">
+                <label for="max_students" class="form-label">Max Students</label>
+                <input type="number" class="form-control" id="max_students" name="max_students" min="1" value="{{ project.max_students }}" required>
+            </div>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save me-2"></i>Save Changes
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

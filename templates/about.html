@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}About - Research Collaboration Platform{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <h1 class="display-5 fw-bold mb-4 border-bottom pb-3">About the Research Collaboration Platform</h1>
+        
+        <section class="mb-5">
+            <h2 class="h3 fw-bold mb-3">Our Mission</h2>
+            <p>The Research Collaboration Platform aims to streamline the collaboration between professors and students for research projects across various departments. By providing a centralized platform, we make it easier for students to discover research opportunities and for professors to find talented students to assist in their projects.</p>
+        </section>
+        
+        <section class="mb-5">
+            <h2 class="h3 fw-bold mb-3">How It Benefits You</h2>
+            
+            <div class="card mb-4 border-0 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="h5 mb-0">For Students</h3>
+                </div>
+                <div class="card-body">
+                    <ul class="mb-0">
+                        <li>Discover research opportunities across different departments</li>
+                        <li>Showcase your skills and interests to potential professors</li>
+                        <li>Gain valuable research experience to enhance your academic profile</li>
+                        <li>Track your involvement and contributions to various projects</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="card mb-4 border-0 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="h5 mb-0">For Professors</h3>
+                </div>
+                <div class="card-body">
+                    <ul class="mb-0">
+                        <li>Find students with specific skills required for your research</li>
+                        <li>Manage and track the progress of your research projects</li>
+                        <li>Collaborate more effectively with students and colleagues</li>
+                        <li>Showcase your research initiatives to the college community</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="h5 mb-0">For the College</h3>
+                </div>
+                <div class="card-body">
+                    <ul class="mb-0">
+                        <li>Monitor research activities across different departments</li>
+                        <li>Track progress and outcomes of research initiatives</li>
+                        <li>Promote interdisciplinary collaboration</li>
+                        <li>Showcase the institution's research capabilities</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <section class="mb-5">
+            <h2 class="h3 fw-bold mb-3">Getting Started</h2>
+            <p>To get started with the Research Collaboration Platform:</p>
+            <ol>
+                <li>Login using your Microsoft account credentials</li>
+                <li>Complete your profile with relevant information about your skills and interests</li>
+                <li>Browse available research projects or create your own (for professors)</li>
+                <li>Connect with professors or students to start collaborating</li>
+            </ol>
+            <div class="mt-4">
+                <a href="{% url 'account_login' %}" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt me-2"></i>Login to Get Started
+                </a>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}

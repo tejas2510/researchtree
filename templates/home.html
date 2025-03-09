@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}ResearchTree - Home{% endblock %}
+
+{% block content %}
+<div class="row align-items-center">
+    <div class="col-lg-6">
+        <h1 class="display-4 fw-bold mb-4">ResearchTree🌳</h1>
+        <p class="lead">Connect students and professors for collaborative research projects.</p>
+        <p class="mb-4">This platform facilitates research collaboration by connecting students with professors working on innovative projects across various departments.</p>
+        
+        {% if not user.is_authenticated %}
+            <div class="mt-4">
+                <a href="{% url 'account_login' %}" class="btn btn-primary btn-lg me-2">
+                    <i class="fas fa-sign-in-alt me-2"></i>Login with Microsoft
+                </a>
+                <a href="{% url 'about' %}" class="btn btn-outline-secondary btn-lg">
+                    <i class="fas fa-info-circle me-2"></i>Learn More
+                </a>
+            </div>
+        {% else %}
+            <div class="mt-4">
+                <a href="{% url 'dashboard' %}" class="btn btn-primary btn-lg me-2">
+                    <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
+                </a>
+                <a href="{% url 'project_list' %}" class="btn btn-outline-secondary btn-lg">
+                    <i class="fas fa-flask me-2"></i>Browse Projects
+                </a>
+            </div>
+        {% endif %}
+    </div>
+    <div class="col-lg-6 mt-4 mt-lg-0">
+        <img src="https://cdn-icons-png.flaticon.com/512/8878/8878374.png" alt="Research Collaboration" class="">
+    </div>
+</div>
+
+<div class="row mt-5 pt-4">
+    <div class="col-12 text-center mb-4">
+        <h2 class="fw-bold">How It Works</h2>
+        <p class="text-muted">Our platform simplifies collaboration between professors and students</p>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center p-4">
+                <div class="icon-box mb-3">
+                    <i class="fas fa-user-plus fa-3x text-primary"></i>
+                </div>
+                <h3 class="h4 card-title">Create Profile</h3>
+                <p class="card-text">Login with your Microsoft account and set up your profile with skills and interests.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center p-4">
+                <div class="icon-box mb-3">
+                    <i class="fas fa-search fa-3x text-primary"></i>
+                </div>
+                <h3 class="h4 card-title">Find Projects</h3>
+                <p class="card-text">Students can browse and search for research projects that match their interests and skills.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center p-4">
+                <div class="icon-box mb-3">
+                    <i class="fas fa-flask fa-3x text-primary"></i>
+                </div>
+                <h3 class="h4 card-title">Collaborate</h3>
+                <p class="card-text">Join projects, track progress, and collaborate with professors and peers on research.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

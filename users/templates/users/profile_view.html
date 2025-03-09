@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ profile_user.get_full_name|default:profile_user.email }} - Profile{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h2 class="h4 mb-0">User Profile</h2>
+                {% if profile_user == user %}
+                    <a href="{% url 'profile_edit' %}" class="btn btn-light btn-sm">
+                        <i class="fas fa-edit me-1"></i>Edit Profile
+                    </a>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-4 text-center mb-3 mb-md-0">
+                        {% if profile_user.profile_image %}
+                            <img src="{{ profile_user.profile_image.url }}" alt="{{ profile_user.get_full_name }}" class="img-fluid rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+                        {% else %}
+                            <div class="bg-light rounded-circle d-flex justify-content-center align-items-center mx-auto" style="width: 150px; height: 150px;">
+                                <i class="fas fa-user fa-4x text-secondary"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-8">
+                        <h3 class="h3 mb-2">{{ profile_user.get_full_name|default:profile_user.email }}</h3>
+                        <p class="text-muted mb-2">
+                            <span class="badge bg-primary">{{ profile_user.get_user_type_display }}</span>
+                            <span class="ms-2">{{ profile_user.department }}</span>
+                        </p>
+                        
+                        {% if profile_user.user_type == 'professor' %}
+                            <p class="mb-1"><strong>Title:</strong> {{ profile_user.title|default:"Not specified" }}</p>
+                        {% endif %}
+                        
+                        {% if profile_user.user_type == 'student' and profile_user.year_of_study %}
+                            <p class="mb-1"><strong>Year of Study:</strong> {{ profile_user.year_of_study }}</p>
+                        {% endif %}
+                        
+                        <p class="mb-0"><strong>Email:</strong> {{ profile_user.email }}</p>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-12">
+                        <h4 class="h5 mb-3 border-bottom pb-2">Bio</h4>
+                        <p>{{ profile_user.bio|default:"No bio added yet." }}</p>
+                    </div>
+                    
+                    {% if profile_user.user_type == 'student' and profile_user.skills %}
+                        <div class="col-12 mt-3">
+                            <h4 class="h5 mb-3 border-bottom pb-2">Skills</h4>
+                            <div>
+                                {% for skill in profile_user.skills.split|dictsort:0 %}
+                                    <span class="badge bg-secondary me-2 mb-2">{{ skill }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+                    
+                    {% if profile_user.user_type == 'professor' %}
+                        <div class="col-12 mt-3">
+                            <h4 class="h5 mb-3 border-bottom pb-2">Contact Information</h4>
+                            <p class="mb-1"><strong>Office:</strong> {{ profile_user.office_location|default:"Not specified" }}</p>
+                            <p class="mb-0"><strong>Office Hours:</strong> {{ profile_user.office_hours|default:"Not specified" }}</p>
+                        </div>
+                        
+                        <div class="col-12 mt-3">
+                            <h4 class="h5 mb-3 border-bottom pb-2">Research Projects</h4>
+                            {% if profile_user.owned_projects.all %}
+                                <div class="list-group">
+                                    {% for project in profile_user.owned_projects.all %}
+                                        <a href="{% url 'project_detail' project.id %}" class="list-group-item list-group-item-action">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h5 class="mb-1">{{ project.title }}</h5>
+                                                <span class="badge {% if project.status == 'planning' %}bg-secondary{% elif project.status == 'in_progress' %}bg-primary{% elif project.status == 'completed' %}bg-success{% else %}bg-warning{% endif %}">
+                                                    {{ project.get_status_display }}
+                                                </span>
+                                            </div>
+                                            <p class="mb-1 text-truncate">{{ project.description }}</p>
+                                            <small>Niche: {{ project.niche }}</small>
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <p class="text-muted">No research projects found.</p>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                    
+                    {% if profile_user.user_type == 'student' %}
+                        <div class="col-12 mt-3">
+                            <h4 class="h5 mb-3 border-bottom pb-2">Participating in Research Projects</h4>
+                            {% if profile_user.joined_projects.all %}
+                                <div class="list-group">
+                                    {% for project in profile_user.joined_projects.all %}
+                                        <a href="{% url 'project_detail' project.id %}" class="list-group-item list-group-item-action">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h5 class="mb-1">{{ project.title }}</h5>
+                                                <span class="badge {% if project.status == 'planning' %}bg-secondary{% elif project.status == 'in_progress' %}bg-primary{% elif project.status == 'completed' %}bg-success{% else %}bg-warning{% endif %}">
+                                                    {{ project.get_status_display }}
+                                                </span>
+                                            </div>
+                                            <p class="mb-1 text-truncate">{{ project.description }}</p>
+                                            <small>Led by: {{ project.owner.get_full_name }}</small>
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <p class="text-muted">Not participating in any research projects yet.</p>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
