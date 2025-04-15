@@ -6,14 +6,13 @@ def home(request):
 
 def about(request):
     return render(request, 'about.html')
-    
 def create_superuser(request):
-    try:
-        # Replace with your superuser credentials
-        call_command('createsuperuser', '--username', 'admin', '--email', 'admin@example.com', '--noinput')
-        return HttpResponse("Superuser created successfully!")
-    except Exception as e:
-        return HttpResponse(f"Error: {e}")
+    User = get_user_model()
+    if not User.objects.filter(username='admin').exists():
+        User.objects.create_superuser('admin', 'admin@example.com', 'YourSecurePassword123')
+        return HttpResponse("Superuser created!")
+    return HttpResponse("Superuser already exists.")
+
 
 def reset_admin_password(request):
     User = get_user_model()
