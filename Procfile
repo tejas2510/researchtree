@@ -1,1 +1,1 @@
-web: gunicorn researchtree.wsgi
+web: gunicorn researchtree.wsgi:application
