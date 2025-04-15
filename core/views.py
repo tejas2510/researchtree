@@ -14,3 +14,13 @@ def create_superuser(request):
         return HttpResponse("Superuser created successfully!")
     except Exception as e:
         return HttpResponse(f"Error: {e}")
+
+def reset_admin_password(request):
+    User = get_user_model()
+    try:
+        user = User.objects.get(username='admin')
+        user.set_password('YourSecurePassword123')  # change this to whatever you want
+        user.save()
+        return HttpResponse("Password reset successfully!")
+    except User.DoesNotExist:
+        return HttpResponse("Admin user does not exist.")
