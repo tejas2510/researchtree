@@ -1,7 +1,6 @@
 from django.urls import path
 from . import views
 from .views import create_superuser  # ← this line was probably missing
-from .views import reset_admin_password  # 🛠️ THIS is the important line
 
 urlpatterns = [
     path('', views.home, name='home'),
