@@ -7,15 +7,15 @@
     <h1 class="mb-4">Welcome to Your Dashboard, Student!</h1>
 
     <div class="row">
-        <!-- Joined Projects Card -->
+        <!-- User Profile Card (Instead of Joined Projects) -->
         <div class="col-md-6 mb-4">
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-primary text-white">
-                    <h2 class="h5 mb-0">Your Joined Projects</h2>
+                    <h2 class="h5 mb-0">Your Profile</h2>
                 </div>
                 <div class="card-body">
-                    <p class="text-muted">View and manage the research projects you have joined.</p>
-                    <a href="/projects/joined/" class="btn btn-primary">View Projects</a>
+                    <p class="text-muted">View your profile and track your progress.</p>
+                    <a href="/users/profile/" class="btn btn-primary">View Profile</a>
                 </div>
             </div>
         </div>
@@ -47,20 +47,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Collaboration Requests Card -->
-        <div class="col-md-6 mb-4">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-warning text-dark">
-                    <h2 class="h5 mb-0">Collaboration Requests</h2>
-                </div>
-                <div class="card-body">
-                    <p class="text-muted">Manage collaboration requests from professors.</p>
-                    <a href="/projects/collaborations/" class="btn btn-warning">View Requests</a>
-                </div>
-            </div>
-        </div>
     </div>
-
 </div>
 {% endblock %}
