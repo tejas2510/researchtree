@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'whitenoise.runserver_nostatic',
     
+    
     # Local apps
     'core.apps.CoreConfig',
     'users.apps.UsersConfig',
@@ -88,6 +89,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                
             ],
         },
     },
@@ -167,10 +169,15 @@ AUTHENTICATION_BACKENDS = [
 SITE_ID = 1
 
 # AllAuth settings
+# AllAuth profile forms settings
+SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_AUTO_SIGNUP = True  # Auto-signup users after successful authentication
+ACCOUNT_SIGNUP_REDIRECT_URL = '/'  # Redirect to home after signup (or the desired page)
+ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False   
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_VERIFICATION = 'none'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 

@@ -20,18 +20,25 @@
             </div>
         </div>
 
-        <!-- Collaborator Requests Card -->
-        <div class="col-md-6 mb-4">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-success text-white">
-                    <h2 class="h5 mb-0">Collaboration Requests</h2>
-                </div>
-                <div class="card-body">
-                    <p class="text-muted">Review pending collaboration requests from students.</p>
-                    <a href="/projects/collaborations/" class="btn btn-success">Manage Requests</a>
-                </div>
+        {% if pending_requests %}
+        <div class="row mt-4">
+            <div class="col-12">
+                <h3>Pending Collaboration Requests</h3>
+                <ul class="list-group">
+                    {% for req in pending_requests %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ req.student.get_full_name }} - <strong>{{ req.project.title }}</strong>
+                        <span>
+                            <a href="{% url 'handle_collab_request' req.id 'accept' %}" class="btn btn-sm btn-success">Accept</a>
+                            <a href="{% url 'handle_collab_request' req.id 'reject' %}" class="btn btn-sm btn-danger">Reject</a>
+                        </span>
+                    </li>
+                    {% endfor %}
+                </ul>
             </div>
         </div>
+        {% endif %}
+        
     </div>
 
     <div class="row">

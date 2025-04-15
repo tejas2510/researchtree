@@ -1,0 +1,22 @@
+
+{% extends 'base.html' %}
+r
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title">{{ project.title }}</h5>
+        <span class="badge bg-primary">{{ project.status }}</span>
+        <p class="mt-2"><strong>Department:</strong> {{ project.department }}</p>
+        <p><strong>Niche:</strong> {{ project.niche }}</p>
+        <p><strong>Led by:</strong> {{ project.leader.get_full_name }}</p>
+        <p><strong>Students:</strong> {{ project.students.count }} / {{ project.max_students }}</p>
+        <p><strong>Start Date:</strong> {{ project.start_date|date:"F Y" }}</p>
+        <p><strong>End Date:</strong> {{ project.end_date|date:"F Y" }}</p>
+        <div class="progress mb-2">
+            <div class="progress-bar" role="progressbar" style="width: {{ project.progress }}%;" aria-valuenow="{{ project.progress }}" aria-valuemin="0" aria-valuemax="100">
+                {{ project.progress }}%
+            </div>
+        </div>
+        <p class="card-text">{{ project.description }}</p>
+        <p class="text-muted"><small>Updated: {{ project.updated_at|date:"M d, Y" }}</small></p>
+    </div>
+</div>

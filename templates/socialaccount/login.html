@@ -1,0 +1,78 @@
+{% extends "socialaccount/base.html" %}
+{% load i18n %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background-color: #f8faff;
+    }
+    .container {
+        text-align: center;
+        background: white;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(16, 110, 250, 0.1);
+        max-width: 420px;
+        margin: 40px auto;
+    }
+    h1 {
+        color: #106efa;
+        margin-bottom: 20px;
+    }
+    p {
+        color: #666;
+        margin-bottom: 20px;
+    }
+    .process-button {
+        background-color: #106efa;
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 6px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-top: 20px;
+    }
+    .spinner {
+        border: 4px solid rgba(16, 110, 250, 0.1);
+        border-radius: 50%;
+        border-top: 4px solid #106efa;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+        display: block;
+    }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+
+<div class="container">
+    <h1>{% trans "Sign In Via Google" %}</h1>
+    <div class="spinner"></div>
+    <p>{% trans "Connecting you to Google automatically..." %}</p>
+    
+    {% if process == "connect" %}
+    <p>{% blocktrans with provider.name as provider %}You are about to connect a new third party account from {{ provider }}.{% endblocktrans %}</p>
+    {% else %}
+    <p>{% blocktrans with provider.name as provider %}You are about to sign in using a third party account from {{ provider }}.{% endblocktrans %}</p>
+    {% endif %}
+    
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="process-button" id="auto-submit-button">{% trans "Continue" %}</button>
+    </form>
+</div>
+
+<script>
+    // Automatically click the continue button
+    window.onload = function() {
+        document.getElementById('auto-submit-button').click();
+    }
+</script>
+{% endblock %}

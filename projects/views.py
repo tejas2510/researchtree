@@ -3,7 +3,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponseForbidden
 from .models import ResearchProject, ProjectUpdate
-# projects/views.py
 from .forms import ResearchProjectForm, ProjectUpdateForm, ProgressUpdateForm
 from users.models import CustomUser
 
@@ -11,24 +10,33 @@ from users.models import CustomUser
 def project_list(request):
     # Different behavior based on user type
     if request.user.user_type == 'professor':
-        # Professors see their own projects
-        projects = ResearchProject.objects.filter(owner=request.user)
+        # Professors see their own projects and other professors' projects in tabs
+        own_projects = ResearchProject.objects.filter(owner=request.user)
+        other_projects = ResearchProject.objects.exclude(owner=request.user)
+        
         return render(request, 'projects/project_list.html', {
-            'projects': projects,
-            'is_professor': True
+            'own_projects': own_projects,
+            'other_projects': other_projects,
+            'is_professor': True,
+            'show_tabs': True  # Flag to show tabs in the template
         })
     else:
         # Students see all available projects
         projects = ResearchProject.objects.all()
         return render(request, 'projects/project_list.html', {
             'projects': projects,
-            'is_professor': False
+            'is_professor': False,
+            'show_tabs': False
         })
 
 @login_required
 def project_detail(request, project_id):
     project = get_object_or_404(ResearchProject, id=project_id)
     updates = project.updates.all()
+    project_students = project.students.all()
+    
+    # Split skills into a list
+    skills = [skill.strip() for skill in project.skills_required.split(',')] if project.skills_required else []
     
     # Check if current user is a student in this project
     is_member = request.user in project.students.all()
@@ -74,9 +82,31 @@ def project_detail(request, project_id):
         'is_member': is_member,
         'is_owner': is_owner,
         'update_form': update_form,
-        'progress_form': progress_form
+        'progress_form': progress_form,
+        'project_students': project_students,
+        'skills': skills,
     })
 
+@login_required
+def apply_to_project(request, project_id):
+    project = get_object_or_404(ResearchProject, id=project_id)
+    
+    # Only students can apply
+    if request.user.user_type != 'student':
+        messages.error(request, "Only students can apply to research projects.")
+        return redirect('project_detail', project_id=project.id)
+    
+    # Check if the project is full
+    if project.students.count() >= project.max_students:
+        messages.error(request, "This project has reached its maximum student capacity.")
+        return redirect('project_detail', project_id=project.id)
+    
+    # Add the student to the project
+    project.students.add(request.user)
+    messages.success(request, f"You have successfully applied to '{project.title}'.")
+    
+    # Redirect back to the project
+    return redirect('project_detail', project_id=project.id)
 
 @login_required
 def project_create(request):
@@ -118,6 +148,22 @@ def project_edit(request, project_id):
     return render(request, 'projects/project_form.html', {'form': form, 'is_new': False})
 
 @login_required
+def project_delete(request, project_id):
+    project = get_object_or_404(ResearchProject, id=project_id)
+    
+    # Only the owner can delete the project
+    if project.owner != request.user:
+        return HttpResponseForbidden("You don't have permission to delete this project.")
+    
+    if request.method == 'POST':
+        project_title = project.title
+        project.delete()
+        messages.success(request, f'Project "{project_title}" deleted successfully.')
+        return redirect('project_list')
+    
+    return redirect('project_detail', project_id=project.id)
+
+@login_required
 def manage_students(request, project_id):
     project = get_object_or_404(ResearchProject, id=project_id)
     
@@ -135,8 +181,12 @@ def manage_students(request, project_id):
                 student = CustomUser.objects.get(id=student_id)
                 
                 if action == 'add' and student.user_type == 'student':
-                    project.students.add(student)
-                    messages.success(request, f"{student.get_full_name()} added to the project.")
+                    # Check if project is full before adding
+                    if project.students.count() >= project.max_students:
+                        messages.error(request, "This project has reached its maximum student capacity.")
+                    else:
+                        project.students.add(student)
+                        messages.success(request, f"{student.get_full_name()} added to the project.")
                     
                 elif action == 'remove':
                     project.students.remove(student)

@@ -1,54 +1,294 @@
 {% extends 'base.html' %}
 
-{% block title %}Project Details{% endblock %}
+{% block title %}{{ project.title }} - Project Details{% endblock %}
 
 {% block content %}
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h2">{{ project.title }}</h1>
-        {% if is_professor and project.owner == user %}
-            <a href="{% url 'project_edit' project.id %}" class="btn btn-outline-secondary">
-                <i class="fas fa-edit me-2"></i>Edit Project
-            </a>
-        {% endif %}
-    </div>
-    
-    <div class="card border-0 shadow-sm mb-4">
-        <div class="card-body">
-            <p class="mb-1"><strong>Department:</strong> {{ project.department_requirement|default:"Any" }}</p>
-            <p class="mb-1"><strong>Niche:</strong> {{ project.niche }}</p>
-            <p class="mb-1"><strong>Led by:</strong> <a href="{% url 'view_user_profile' project.owner.id %}">{{ project.owner.get_full_name }}</a></p>
-            <p class="mb-1"><strong>Students:</strong> {{ project.students.count }} / {{ project.max_students }}</p>
-            <p class="mb-1"><strong>Start Date:</strong> {{ project.start_date|date:"F Y" }}</p>
-            <p class="mb-1"><strong>End Date:</strong> {{ project.end_date|date:"F Y" }}</p>
-            <p class="mb-1"><strong>Status:</strong> <span class="badge {% if project.status == 'planning' %}bg-secondary{% elif project.status == 'in_progress' %}bg-primary{% elif project.status == 'completed' %}bg-success{% else %}bg-warning{% endif %}">{{ project.get_status_display }}</span></p>
-            
-            <div class="progress mt-3 mb-3" style="height: 20px;">
-                <div class="progress-bar" role="progressbar" style="width: {{ project.progress }}%;" aria-valuenow="{{ project.progress }}" aria-valuemin="0" aria-valuemax="100">{{ project.progress }}%</div>
+
+<div class="mb-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'project_list' %}">Projects</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ project.title }}</li>
+        </ol>
+    </nav>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Project Details Card -->
+        
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h1 class="h3 mb-0">{{ project.title }}</h1>
+                <span class="badge {% if project.status == 'planning' %}bg-secondary{% elif project.status == 'in_progress' %}bg-primary{% elif project.status == 'completed' %}bg-success{% else %}bg-warning{% endif %}">
+                    {{ project.get_status_display }}
+                </span>
             </div>
-            
-            <p class="mt-3">{{ project.description }}</p>
-            
-            {% if project.skills_required_list %}
-                <p class="mb-1"><strong>Skills Required:</strong></p>
-                <div>
-                    {% for skill in project.skills_required_list %}
-                        <span class="badge bg-secondary me-2 mb-1">{{ skill }}</span>
-                    {% endfor %}
+            <div class="card-body">
+                <div class="mb-4">
+                    <h2 class="h5 mb-3 border-bottom pb-2">Description</h2>
+                    <p>{{ project.description }}</p>
                 </div>
-            {% endif %}
+
+                <div class="mb-4">
+                    <h2 class="h5 mb-3 border-bottom pb-2">Project Progress</h2>
+                    <div class="d-flex justify-content-between mb-1">
+                        <span>{{ project.progress }}% Complete</span>
+                        {% if is_owner %}
+                            <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#progressModal">
+                                <i class="fas fa-edit me-1"></i>Update Progress
+                            </button>
+                        {% endif %}
+                    </div>
+                    <div class="progress mb-2" style="height: 20px;">
+                        <!-- stylelint-disable-next-line -->
+                        <div class="progress-bar" role="progressbar" style="width: {{ project.progress }}%;" aria-valuenow="{{ project.progress }}" aria-valuemin="0" aria-valuemax="100">{{ project.progress }}%</div>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h2 class="h5 mb-3 border-bottom pb-2">Project Information</h2>
+                        <p class="mb-1"><strong>Niche:</strong> {{ project.niche }}</p>
+                        <p class="mb-1"><strong>Department:</strong> {{ project.department_requirement|default:"Any" }}</p>
+                        <p class="mb-1"><strong>Led by:</strong> <a href="{% url 'view_user_profile' project.owner.id %}">{{ project.owner.get_full_name }}</a></p>
+                        <p class="mb-1"><strong>Max Students:</strong> {{ project.max_students }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h2 class="h5 mb-3 border-bottom pb-2">Skills Required</h2>
+                        {% if skills %}
+                            {% for skill in skills %}
+                                <span class="badge bg-secondary me-2 mb-1">{{ skill }}</span>
+                            {% endfor %}
+                        {% else %}
+                            <p>No specific skills required.</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Enhanced Research Team Section -->
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h2 class="h5 mb-0 border-bottom pb-2">Research Team Members</h2>
+                        {% if is_owner %}
+                        <a href="{% url 'manage_students' project.id %}" class="btn btn-sm btn-primary">
+                            <i class="fas fa-user-plus me-1"></i>Manage Team
+                        </a>
+                        {% endif %}
+                    </div>
+                    
+                    {% if project.students.exists %}
+                        <div class="list-group">
+                            {% for student in project.students.all %}
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <a href="{% url 'view_user_profile' student.id %}" class="text-decoration-none">
+                                            <strong>{{ student.get_full_name }}</strong>
+                                        </a>
+                                        {% if student.department %}
+                                            <span class="text-muted ms-2">({{ student.department }})</span>
+                                        {% endif %}
+                                    </div>
+                                    {% if is_owner %}
+                                    <form method="post" action="{% url 'manage_students' project.id %}" class="d-inline">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="remove">
+                                        <input type="hidden" name="student_id" value="{{ student.id }}">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            <i class="fas fa-user-minus"></i>
+                                        </button>
+                                    </form>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p>No students have joined this project yet.</p>
+        
+                    {% endif %}
+                </div>
+
+                <div class="mt-3">
+                    {% if is_owner %}
+                        <a href="{% url 'project_edit' project.id %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-edit me-2"></i>Edit Project
+                        </a>
+                        <button type="button" class="btn btn-outline-danger ms-2" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                            <i class="fas fa-trash me-2"></i>Delete Project
+                        </button>
+                    {% elif not is_owner and not is_member %}
+                        <a href="{% url 'view_user_profile' project.owner.id %}" class="btn btn-primary">
+                            <i class="fas fa-sign-in-alt me-2"></i>Contact Professor
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
     
-    <div class="d-flex justify-content-between">
-        <a href="{% url 'project_list' %}" class="btn btn-outline-primary">
-            <i class="fas fa-arrow-left me-2"></i>Back to Projects
-        </a>
-        {% if is_student and project not in user.projects.all %}
-            <a href="{% url 'project_apply' project.id %}" class="btn btn-success">
-                <i class="fas fa-user-plus me-2"></i>Apply to Project
-            </a>
-        {% endif %}
+    <div class="col-lg-4">
+        <!-- Project Updates Card -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white">
+                <h2 class="h5 mb-0">Project Updates</h2>
+            </div>
+            <div class="card-body">
+                {% if updates %}
+                    <div class="list-group list-group-flush">
+                        {% for update in updates %}
+                            <div class="list-group-item px-0">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <h6 class="mb-0">{{ update.created_by.get_full_name }}</h6>
+                                    <small class="text-muted">{{ update.created_at|date:"M d, Y" }}</small>
+                                </div>
+                                <p class="mb-0">{{ update.content }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted">No updates have been posted yet.</p>
+                {% endif %}
+                
+                {% if is_owner or is_member %}
+                    <div class="mt-3">
+                        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#updateModal">
+                            <i class="fas fa-plus me-1"></i>Add Update
+                        </button>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
     </div>
 </div>
+
+<!-- Progress Update Modal -->
+{% if is_owner %}
+<div class="modal fade" id="progressModal" tabindex="-1" aria-labelledby="progressModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="progressModalLabel">Update Project Progress</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <input type="hidden" name="update_progress" value="true">
+                    <div class="mb-3">
+                        <label for="progress" class="form-label">Progress (0-100%)</label>
+                        <input type="range" class="form-range" min="0" max="100" id="progress" name="progress" value="{{ project.progress }}">
+                        <div class="text-center" id="progressValue">{{ project.progress }}%</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Project Status</label>
+                        <select class="form-select" id="status" name="status">
+                            {% for value, display in project.STATUS_CHOICES %}
+                                <option value="{{ value }}" {% if project.status == value %}selected{% endif %}>{{ display }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Add Update Modal -->
+{% if is_owner or is_member %}
+<div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateModalLabel">Add Project Update</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <input type="hidden" name="submit_update" value="true">
+                    <div class="mb-3">
+                        <label for="content" class="form-label">Update Content</label>
+                        <textarea class="form-control" id="content" name="content" rows="4" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Post Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Delete Confirmation Modal -->
+{% if is_owner %}
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Delete Project</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete the project "<strong>{{ project.title }}</strong>"? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form method="post" action="{% url 'project_delete' project.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Delete Project</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Success Modal -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="successModalLabel">Success</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Project has been successfully deleted.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Update progress value display
+    document.addEventListener('DOMContentLoaded', function() {
+        const progressRange = document.getElementById('progress');
+        const progressValue = document.getElementById('progressValue');
+        
+        if (progressRange && progressValue) {
+            progressRange.addEventListener('input', function() {
+                progressValue.textContent = this.value + '%';
+            });
+        }
+
+        // Show success modal if deletion was successful
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'success' and 'deleted' in message %}
+                    var successModal = new bootstrap.Modal(document.getElementById('successModal'));
+                    successModal.show();
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    });
+</script>
 {% endblock %}
