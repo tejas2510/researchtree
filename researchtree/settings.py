@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-%1u+gu6tf36a&p6zm#4g&u6ghak-&1$8_414(&%s8bau67439i
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,[::1]").split(",")
+ALLOWED_HOSTS = ['researchtree.onrender.com', 'localhost', '127.0.0.1']
 # settings.py
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 ACCOUNT_EMAIL_VERIFICATION = "none"  # Disable email verification
