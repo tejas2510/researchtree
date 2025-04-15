@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+import dj_database_url
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -28,7 +29,7 @@ SECRET_KEY = 'django-insecure-%1u+gu6tf36a&p6zm#4g&u6ghak-&1$8_414(&%s8bau67439i
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['researchtree.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['researchtree.onrender.com', 'localhost', '127.0.0.1','.onrender.com']
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 ACCOUNT_EMAIL_VERIFICATION = "none"  # Disable email verification
 
@@ -107,20 +108,17 @@ WSGI_APPLICATION = 'researchtree.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
-# For production, use PostgreSQL
 if os.getenv('DATABASE_URL'):
-    import dj_database_url
-    DATABASES['default'] = dj_database_url.config(
-        default=os.getenv('DATABASE_URL')
-    )
+    DATABASES['default'] = dj_database_url.config(default=os.getenv('DATABASE_URL'))
 
+# Fallback to SQLite for local development (if DATABASE_URL is not set)
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
