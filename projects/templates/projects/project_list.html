@@ -3,6 +3,87 @@
 {% block title %}Research Projects{% endblock %}
 
 {% block content %}
+<style>
+    .project-card {
+        border: none;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(14px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+    }
+
+    .project-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 16px 28px rgba(0, 0, 0, 0.12);
+    }
+
+    .card-header.bg-white {
+        background-color: rgba(255, 255, 255, 0.85) !important;
+        border-bottom: 1px solid #eee;
+        font-weight: 600;
+    }
+
+    .nav-tabs .nav-link {
+        border: none;
+        color: #555;
+        font-weight: 500;
+        padding: 0.75rem 1.5rem;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+    }
+
+    .nav-tabs .nav-link.active {
+        background: linear-gradient(to right, #007bff, #00bfff);
+        color: white !important;
+        font-weight: 600;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-tabs .nav-link:hover {
+        background: #f5f5f5;
+    }
+
+    .btn-outline-primary {
+        border-radius: 50px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .btn-primary {
+        border-radius: 50px;
+        padding: 0.5rem 1.25rem;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .alert-info {
+        border-radius: 12px;
+        background: rgba(240, 248, 255, 0.9);
+        border: 1px solid #b6e0fe;
+    }
+
+    .badge {
+        font-size: 0.75rem;
+        padding: 0.35em 0.6em;
+        border-radius: 8px;
+        font-weight: 600;
+    }
+
+    h1.h2 {
+        font-weight: 700;
+        font-size: 2.2rem;
+        background: linear-gradient(to right, #007bff, #00c6ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+</style>
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h2">Research Projects</h1>
@@ -14,7 +95,7 @@
     </div>
 
     {% if is_professor %}
-    <!-- Tab navigation for professors - removing show_tabs condition -->
+    <!-- Tab navigation for professors -->
     <ul class="nav nav-tabs mb-4" id="projectTabs" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link active" id="my-projects-tab" data-bs-toggle="tab" data-bs-target="#my-projects" type="button" role="tab" aria-controls="my-projects" aria-selected="true">My Projects</button>
@@ -23,15 +104,41 @@
             <button class="nav-link" id="other-projects-tab" data-bs-toggle="tab" data-bs-target="#other-projects" type="button" role="tab" aria-controls="other-projects" aria-selected="false">Other Projects</button>
         </li>
     </ul>
-    
+
     <!-- Tab content for professors -->
     <div class="tab-content" id="projectTabsContent">
         <!-- My Projects Tab -->
         <div class="tab-pane fade show active" id="my-projects" role="tabpanel" aria-labelledby="my-projects-tab">
+            <div class="sticky-top mb-4 bg-white p-3">
+                <!-- Search + Filter inside the tab -->
+                <div class="d-flex justify-content-between">
+                    <div class="col-md-5 mb-2">
+                        <input type="text" id="search-my-projects" class="form-control" placeholder="Search my projects..." list="search-suggestions-my-projects">
+                        <datalist id="search-suggestions-my-projects">
+                            {% for project in own_projects %}
+                                <option value="{{ project.title }}">
+                                <option value="{{ project.niche }}">
+                            {% endfor %}
+                        </datalist>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <select id="status-filter-my-projects" class="form-select">
+                            <option value="">All Statuses</option>
+                            <option value="planning">Planning</option>
+                            <option value="in_progress">In Progress</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <button id="reset-my-projects" class="btn btn-secondary w-100">Reset</button>
+                    </div>
+                </div>
+            </div>
+
             {% if own_projects %}
-                <div class="row">
+                <div class="row" id="my-projects-list">
                     {% for project in own_projects %}
-                        <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="col-md-6 col-lg-4 mb-4 project-item">
                             <div class="card h-100 shadow-sm border-0">
                                 <div class="card-header bg-white">
                                     <h5 class="card-title mb-0">{{ project.title }}</h5>
@@ -61,13 +168,39 @@
                 </div>
             {% endif %}
         </div>
-        
+
         <!-- Other Projects Tab -->
         <div class="tab-pane fade" id="other-projects" role="tabpanel" aria-labelledby="other-projects-tab">
+            <div class="sticky-top mb-4 bg-white p-3">
+                <!-- Search + Filter inside the tab -->
+                <div class="d-flex justify-content-between">
+                    <div class="col-md-5 mb-2">
+                        <input type="text" id="search-other-projects" class="form-control" placeholder="Search other projects..." list="search-suggestions-other-projects">
+                        <datalist id="search-suggestions-other-projects">
+                            {% for project in other_projects %}
+                                <option value="{{ project.title }}">
+                                <option value="{{ project.niche }}">
+                            {% endfor %}
+                        </datalist>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <select id="status-filter-other-projects" class="form-select">
+                            <option value="">All Statuses</option>
+                            <option value="planning">Planning</option>
+                            <option value="in_progress">In Progress</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <button id="reset-other-projects" class="btn btn-secondary w-100">Reset</button>
+                    </div>
+                </div>
+            </div>
+
             {% if other_projects %}
-                <div class="row">
+                <div class="row" id="other-projects-list">
                     {% for project in other_projects %}
-                        <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="col-md-6 col-lg-4 mb-4 project-item">
                             <div class="card h-100 shadow-sm border-0">
                                 <div class="card-header bg-white">
                                     <h5 class="card-title mb-0">{{ project.title }}</h5>
@@ -99,13 +232,38 @@
             {% endif %}
         </div>
     </div>
-    
+
     {% else %}
     <!-- Regular project list for students -->
+    <div class="d-flex justify-content-between mb-4">
+        <!-- Search + Filter inside the tab -->
+        <div class="col-md-5 mb-2">
+            <input type="text" id="search-projects" class="form-control" placeholder="Search projects..." list="search-suggestions">
+            <datalist id="search-suggestions">
+                {% for project in projects %}
+                    <option value="{{ project.title }}">
+                    <option value="{{ project.niche }}">
+                {% endfor %}
+            </datalist>
+        </div>
+        <div class="col-md-4 mb-2">
+            <select id="status-filter-projects" class="form-select">
+                <option value="">All Statuses</option>
+                <option value="planning">Planning</option>
+                <option value="in_progress">In Progress</option>
+                <option value="completed">Completed</option>
+            </select>
+        </div>
+        <!-- Reset button -->
+        <div class="col-md-2 mb-2">
+            <button id="reset-projects" class="btn btn-secondary w-100">Reset</button>
+        </div>
+    </div>
+
     {% if projects %}
-        <div class="row">
+        <div class="row" id="projects-list">
             {% for project in projects %}
-                <div class="col-md-6 col-lg-4 mb-4">
+                <div class="col-md-6 col-lg-4 mb-4 project-item">
                     <div class="card h-100 shadow-sm border-0">
                         <div class="card-header bg-white">
                             <h5 class="card-title mb-0">{{ project.title }}</h5>
@@ -137,4 +295,69 @@
     {% endif %}
     {% endif %}
 </div>
+
+{% block extra_css %}
+<style>
+    .sticky-top {
+        z-index: 1050;
+    }
+    .project-item {
+        display: none; /* Initially hide projects */
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Function to reset filters
+        function resetFilters(tab) {
+            document.querySelector(`#search-${tab}`).value = '';
+            document.querySelector(`#status-filter-${tab}`).value = '';
+            filterProjects(tab);
+        }
+
+        // Function to filter projects
+        function filterProjects(tab) {
+            let searchInput = document.querySelector(`#search-${tab}`).value.toLowerCase();
+            let statusFilter = document.querySelector(`#status-filter-${tab}`).value;
+            let projects = document.querySelectorAll(`#${tab}-projects-list .project-item`);
+            
+            projects.forEach(function (project) {
+                let title = project.querySelector('.card-title').textContent.toLowerCase();
+                let niche = project.querySelector('.card-text').textContent.toLowerCase();
+                let status = project.querySelector('.badge').textContent.toLowerCase();
+                
+                let matchesSearch = title.includes(searchInput) || niche.includes(searchInput);
+                let matchesStatus = status.includes(statusFilter.toLowerCase());
+                
+                if (matchesSearch && matchesStatus) {
+                    project.style.display = 'block';
+                } else {
+                    project.style.display = 'none';
+                }
+            });
+        }
+
+        // Add event listeners to filter fields
+        ['my-projects', 'other-projects'].forEach(function (tab) {
+            document.querySelector(`#search-${tab}`).addEventListener('input', function () {
+                filterProjects(tab);
+            });
+
+            document.querySelector(`#status-filter-${tab}`).addEventListener('change', function () {
+                filterProjects(tab);
+            });
+
+            document.querySelector(`#reset-${tab}`).addEventListener('click', function () {
+                resetFilters(tab);
+            });
+        });
+
+        // Initial filter
+        filterProjects('my-projects');
+        filterProjects('other-projects');
+    });
+</script>
 {% endblock %}
