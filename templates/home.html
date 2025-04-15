@@ -3,75 +3,151 @@
 {% block title %}ResearchTree - Home{% endblock %}
 
 {% block content %}
-<div class="row align-items-center">
-    <div class="col-lg-6">
-        <h1 class="display-4 fw-bold mb-4">ResearchTree🌳</h1>
-        <p class="lead">Connect students and professors for collaborative research projects.</p>
-        <p class="mb-4">This platform facilitates research collaboration by connecting students with professors working on innovative projects across various departments.</p>
-        
-        {% if not user.is_authenticated %}
-            <div class="mt-4">
-                <a href="{% url 'account_login' %}" class="btn btn-primary btn-lg me-2">
-                    <i class="fas fa-sign-in-alt me-2"></i>Login with Microsoft
-                </a>
-                <a href="{% url 'about' %}" class="btn btn-outline-secondary btn-lg">
-                    <i class="fas fa-info-circle me-2"></i>Learn More
-                </a>
+<style>
+    body {
+        background: linear-gradient(135deg, #e0f7fa, #fff3e0);
+    }
+
+    .hero-section {
+        min-height: 85vh;
+        display: flex;
+        align-items: center;
+    }
+
+    .hero-heading {
+        font-size: 3.5rem;
+        font-weight: 800;
+        background: linear-gradient(to right, #3f51b5, #2196f3);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .glass-box {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        padding: 2.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-google {
+        background: #ffffff;
+        color: #444;
+        border: 1px solid #ddd;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0.6rem 1.2rem;
+        border-radius: 50px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        transition: all 0.3s ease-in-out;
+    }
+
+    .btn-google:hover {
+        transform: scale(1.03);
+        background: #f8f9fa;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    .how-it-works-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(to right, #ff6f91, #ff9671);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .card-icon {
+        width: 70px;
+        height: 70px;
+        background-color: #e3f2fd;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .hero-img {
+        max-width: 100%;
+        animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+</style>
+
+<div class="container hero-section">
+    <div class="row align-items-center">
+        <div class="col-lg-6">
+            <div class="glass-box">
+                <h1 class="hero-heading mb-4">ResearchTree 🌳</h1>
+                <p class="lead">Connect students and professors for collaborative research projects across disciplines.</p>
+                <p class="mb-4 text-muted">Discover, apply, collaborate — all on one streamlined platform that brings innovation to life.</p>
+
+                {% if not user.is_authenticated %}
+                    <div class="mt-4 d-flex flex-column flex-sm-row gap-3">
+                        <a href="{% url 'account_login' %}" class="btn btn-google btn-lg">
+                            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo" width="20">
+                            Login with Google
+                        </a>
+                        <a href="{% url 'about' %}" class="btn btn-outline-secondary btn-lg">Learn More</a>
+                    </div>
+                {% else %}
+                    <div class="mt-4 d-flex flex-column flex-sm-row gap-3">
+                        <a href="{% url 'dashboard' %}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
+                        </a>
+                        <a href="{% url 'project_list' %}" class="btn btn-outline-secondary btn-lg">
+                            <i class="fas fa-flask me-2"></i>Browse Projects
+                        </a>
+                    </div>
+                {% endif %}
             </div>
-        {% else %}
-            <div class="mt-4">
-                <a href="{% url 'dashboard' %}" class="btn btn-primary btn-lg me-2">
-                    <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
-                </a>
-                <a href="{% url 'project_list' %}" class="btn btn-outline-secondary btn-lg">
-                    <i class="fas fa-flask me-2"></i>Browse Projects
-                </a>
-            </div>
-        {% endif %}
-    </div>
-    <div class="col-lg-6 mt-4 mt-lg-0">
-        <img src="https://cdn-icons-png.flaticon.com/512/8878/8878374.png" alt="Research Collaboration" class="">
+        </div>
+        <div class="col-lg-6 text-center mt-4 mt-lg-0">
+            <img src="https://cdn-icons-png.flaticon.com/512/8878/8878374.png" alt="Research Collaboration" class="hero-img" style="width: 80%;">
+        </div>
     </div>
 </div>
 
-<div class="row mt-5 pt-4">
-    <div class="col-12 text-center mb-4">
-        <h2 class="fw-bold">How It Works</h2>
-        <p class="text-muted">Our platform simplifies collaboration between professors and students</p>
+<div class="container mt-5 pt-4">
+    <div class="text-center mb-5">
+        <h2 class="how-it-works-title">How It Works</h2>
+        <p class="text-muted">We simplify collaboration so you can focus on innovating</p>
     </div>
-    
-    <div class="col-md-4 mb-4">
-        <div class="card h-100 border-0 shadow-sm">
-            <div class="card-body text-center p-4">
-                <div class="icon-box mb-3">
-                    <i class="fas fa-user-plus fa-3x text-primary"></i>
+
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow glass-box text-center">
+                <div class="card-icon">
+                    <i class="fas fa-user-plus fa-2x text-primary"></i>
                 </div>
-                <h3 class="h4 card-title">Create Profile</h3>
-                <p class="card-text">Login with your Microsoft account and set up your profile with skills and interests.</p>
+                <h3 class="h5 fw-bold">Create Profile</h3>
+                <p class="text-muted">Log in, set your interests and skills, and start your research journey.</p>
             </div>
         </div>
-    </div>
-    
-    <div class="col-md-4 mb-4">
-        <div class="card h-100 border-0 shadow-sm">
-            <div class="card-body text-center p-4">
-                <div class="icon-box mb-3">
-                    <i class="fas fa-search fa-3x text-primary"></i>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow glass-box text-center">
+                <div class="card-icon">
+                    <i class="fas fa-search fa-2x text-success"></i>
                 </div>
-                <h3 class="h4 card-title">Find Projects</h3>
-                <p class="card-text">Students can browse and search for research projects that match their interests and skills.</p>
+                <h3 class="h5 fw-bold">Find Projects</h3>
+                <p class="text-muted">Browse curated research projects and apply to ones that excite you.</p>
             </div>
         </div>
-    </div>
-    
-    <div class="col-md-4 mb-4">
-        <div class="card h-100 border-0 shadow-sm">
-            <div class="card-body text-center p-4">
-                <div class="icon-box mb-3">
-                    <i class="fas fa-flask fa-3x text-primary"></i>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow glass-box text-center">
+                <div class="card-icon">
+                    <i class="fas fa-handshake fa-2x text-warning"></i>
                 </div>
-                <h3 class="h4 card-title">Collaborate</h3>
-                <p class="card-text">Join projects, track progress, and collaborate with professors and peers on research.</p>
+                <h3 class="h5 fw-bold">Collaborate</h3>
+                <p class="text-muted">Join projects, work with professors and peers, and bring your ideas to life.</p>
             </div>
         </div>
     </div>
