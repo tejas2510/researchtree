@@ -84,6 +84,7 @@
         -webkit-text-fill-color: transparent;
     }
 </style>
+
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h2">Research Projects</h1>
@@ -271,7 +272,6 @@
                         <div class="card-body">
                             <p class="card-text text-muted mb-2">{{ project.description|truncatechars:100 }}</p>
                             <p class="mb-1"><strong>Niche:</strong> {{ project.niche }}</p>
-                            <p class="mb-1"><strong>Led by:</strong> {{ project.owner.get_full_name }}</p>
                             <p class="mb-1"><strong>Status:</strong> 
                                 <span class="badge {% if project.status == 'planning' %}bg-secondary{% elif project.status == 'in_progress' %}bg-primary{% elif project.status == 'completed' %}bg-success{% else %}bg-warning{% endif %}">
                                     {{ project.get_status_display }}
@@ -290,74 +290,76 @@
         </div>
     {% else %}
         <div class="alert alert-info">
-            <i class="fas fa-info-circle me-2"></i>No research projects are available at the moment.
+            <i class="fas fa-info-circle me-2"></i>No projects found.
         </div>
     {% endif %}
     {% endif %}
 </div>
 
-{% block extra_css %}
-<style>
-    .sticky-top {
-        z-index: 1050;
-    }
-    .project-item {
-        display: none; /* Initially hide projects */
-    }
-</style>
-{% endblock %}
-
 {% block extra_js %}
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Function to reset filters
-        function resetFilters(tab) {
-            document.querySelector(`#search-${tab}`).value = '';
-            document.querySelector(`#status-filter-${tab}`).value = '';
-            filterProjects(tab);
-        }
-
-        // Function to filter projects
-        function filterProjects(tab) {
-            let searchInput = document.querySelector(`#search-${tab}`).value.toLowerCase();
-            let statusFilter = document.querySelector(`#status-filter-${tab}`).value;
-            let projects = document.querySelectorAll(`#${tab}-projects-list .project-item`);
-            
-            projects.forEach(function (project) {
-                let title = project.querySelector('.card-title').textContent.toLowerCase();
-                let niche = project.querySelector('.card-text').textContent.toLowerCase();
-                let status = project.querySelector('.badge').textContent.toLowerCase();
-                
-                let matchesSearch = title.includes(searchInput) || niche.includes(searchInput);
-                let matchesStatus = status.includes(statusFilter.toLowerCase());
-                
-                if (matchesSearch && matchesStatus) {
-                    project.style.display = 'block';
-                } else {
-                    project.style.display = 'none';
-                }
-            });
-        }
-
-        // Add event listeners to filter fields
-        ['my-projects', 'other-projects'].forEach(function (tab) {
-            document.querySelector(`#search-${tab}`).addEventListener('input', function () {
-                filterProjects(tab);
-            });
-
-            document.querySelector(`#status-filter-${tab}`).addEventListener('change', function () {
-                filterProjects(tab);
-            });
-
-            document.querySelector(`#reset-${tab}`).addEventListener('click', function () {
-                resetFilters(tab);
-            });
-        });
-
-        // Initial filter
+    // Implement JS functionality here
+    document.getElementById('search-my-projects').addEventListener('input', function() {
         filterProjects('my-projects');
+    });
+    document.getElementById('status-filter-my-projects').addEventListener('change', function() {
+        filterProjects('my-projects');
+    });
+    document.getElementById('reset-my-projects').addEventListener('click', function() {
+        resetFilters('my-projects');
+    });
+
+    document.getElementById('search-other-projects').addEventListener('input', function() {
         filterProjects('other-projects');
     });
+    document.getElementById('status-filter-other-projects').addEventListener('change', function() {
+        filterProjects('other-projects');
+    });
+    document.getElementById('reset-other-projects').addEventListener('click', function() {
+        resetFilters('other-projects');
+    });
+
+    document.getElementById('search-projects').addEventListener('input', function() {
+        filterProjects('projects');
+    });
+    document.getElementById('status-filter-projects').addEventListener('change', function() {
+        filterProjects('projects');
+    });
+    document.getElementById('reset-projects').addEventListener('click', function() {
+        resetFilters('projects');
+    });
+
+    function filterProjects(tab) {
+        const searchInput = document.getElementById('search-' + tab).value.toLowerCase();
+        const statusFilter = document.getElementById('status-filter-' + tab).value;
+
+        let projects = document.querySelectorAll(`#${tab}-list .project-item`);
+        projects.forEach(function(project) {
+            let title = project.querySelector('.card-title').textContent.toLowerCase();
+            let status = project.querySelector('.badge').textContent.toLowerCase();
+
+            let match = true;
+            if (searchInput && !title.includes(searchInput)) {
+                match = false;
+            }
+            if (statusFilter && !status.includes(statusFilter)) {
+                match = false;
+            }
+
+            if (match) {
+                project.style.display = 'block';
+            } else {
+                project.style.display = 'none';
+            }
+        });
+    }
+
+    function resetFilters(tab) {
+        document.getElementById('search-' + tab).value = '';
+        document.getElementById('status-filter-' + tab).value = '';
+        filterProjects(tab);
+    }
 </script>
+{% endblock %}
+
 {% endblock %}
