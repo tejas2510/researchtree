@@ -1,78 +1,140 @@
 {% extends 'base.html' %}
 
-{% block title %}About - Research Collaboration Platform{% endblock %}
+{% block title %}About - ResearchTree{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-lg-8 mx-auto">
-        <h1 class="display-5 fw-bold mb-4 border-bottom pb-3">About the Research Collaboration Platform</h1>
-        
-        <section class="mb-5">
-            <h2 class="h3 fw-bold mb-3">Our Mission</h2>
-            <p>The Research Collaboration Platform aims to streamline the collaboration between professors and students for research projects across various departments. By providing a centralized platform, we make it easier for students to discover research opportunities and for professors to find talented students to assist in their projects.</p>
-        </section>
-        
-        <section class="mb-5">
-            <h2 class="h3 fw-bold mb-3">How It Benefits You</h2>
+<style>
+    .about-container {
+        padding-top: 4rem;
+        padding-bottom: 4rem;
+    }
+
+    .section-title {
+        font-size: 2.25rem;
+        font-weight: 800;
+        background: linear-gradient(to right, #007aff, #00c6ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 2rem;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 1rem;
+    }
+
+    .about-card {
+        border: none;
+        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+        transition: transform 0.3s ease;
+    }
+
+    .about-card:hover {
+        transform: translateY(-4px);
+    }
+
+    .card-header {
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+    }
+
+    .btn-get-started {
+        background: #ffffff;
+        color: #444;
+        border: 1px solid #ddd;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0.6rem 1.4rem;
+        border-radius: 50px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        transition: all 0.3s ease-in-out;
+    }
+
+    .btn-get-started:hover {
+        background: #f1f1f1;
+        transform: scale(1.03);
+    }
+
+    ol {
+        padding-left: 1.2rem;
+    }
+</style>
+
+<div class="container about-container">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <h1 class="section-title text-center">About ResearchTree 🌳</h1>
             
-            <div class="card mb-4 border-0 shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <h3 class="h5 mb-0">For Students</h3>
-                </div>
-                <div class="card-body">
-                    <ul class="mb-0">
-                        <li>Discover research opportunities across different departments</li>
-                        <li>Showcase your skills and interests to potential professors</li>
-                        <li>Gain valuable research experience to enhance your academic profile</li>
-                        <li>Track your involvement and contributions to various projects</li>
-                    </ul>
-                </div>
-            </div>
+            <section class="mb-5">
+                <h2 class="h4 fw-bold mb-3">🚀 Our Mission</h2>
+                <p>ResearchTree simplifies and amplifies collaboration between students and professors. Whether you're an innovator or a mentor, we help connect you to the right people and the right ideas, all from one centralized platform.</p>
+            </section>
             
-            <div class="card mb-4 border-0 shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <h3 class="h5 mb-0">For Professors</h3>
+            <section class="mb-5">
+                <h2 class="h4 fw-bold mb-4">🎯 How It Benefits You</h2>
+                
+                <div class="card about-card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="h6 mb-0">For Students</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="mb-0">
+                            <li>🔍 Discover research opportunities across departments</li>
+                            <li>📄 Build a profile that showcases your interests & skills</li>
+                            <li>🎓 Gain research experience to boost your academics</li>
+                            <li>📊 Track your project involvement and contributions</li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <ul class="mb-0">
-                        <li>Find students with specific skills required for your research</li>
-                        <li>Manage and track the progress of your research projects</li>
-                        <li>Collaborate more effectively with students and colleagues</li>
-                        <li>Showcase your research initiatives to the college community</li>
-                    </ul>
+                
+                <div class="card about-card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="h6 mb-0">For Professors</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="mb-0">
+                            <li>🔎 Find the right students with specific skillsets</li>
+                            <li>📈 Manage and monitor project progress efficiently</li>
+                            <li>🤝 Collaborate with students and faculty seamlessly</li>
+                            <li>🏆 Showcase your work to the academic community</li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
+                
+                <div class="card about-card">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="h6 mb-0">For the College</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="mb-0">
+                            <li>📂 Monitor department-wide research initiatives</li>
+                            <li>📋 Track progress and publish outcome metrics</li>
+                            <li>🔗 Enable cross-disciplinary collaboration</li>
+                            <li>🏛️ Showcase institutional research strength</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
             
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <h3 class="h5 mb-0">For the College</h3>
+            <section class="mb-5">
+                <h2 class="h4 fw-bold mb-3">🛠️ Getting Started</h2>
+                <p>Joining ResearchTree is simple:</p>
+                <ol>
+                    <li>Login using your Google account</li>
+                    <li>Complete your profile with your research interests</li>
+                    <li>Explore or create research projects</li>
+                    <li>Collaborate, track progress, and innovate!</li>
+                </ol>
+                <div class="mt-4">
+                    <a href="{% url 'account_login' %}" class="btn btn-get-started btn-lg">
+                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo" width="20">
+                        Login with Google
+                    </a>
                 </div>
-                <div class="card-body">
-                    <ul class="mb-0">
-                        <li>Monitor research activities across different departments</li>
-                        <li>Track progress and outcomes of research initiatives</li>
-                        <li>Promote interdisciplinary collaboration</li>
-                        <li>Showcase the institution's research capabilities</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-        
-        <section class="mb-5">
-            <h2 class="h3 fw-bold mb-3">Getting Started</h2>
-            <p>To get started with the Research Collaboration Platform:</p>
-            <ol>
-                <li>Login using your Microsoft account credentials</li>
-                <li>Complete your profile with relevant information about your skills and interests</li>
-                <li>Browse available research projects or create your own (for professors)</li>
-                <li>Connect with professors or students to start collaborating</li>
-            </ol>
-            <div class="mt-4">
-                <a href="{% url 'account_login' %}" class="btn btn-primary">
-                    <i class="fas fa-sign-in-alt me-2"></i>Login to Get Started
-                </a>
-            </div>
-        </section>
+            </section>
+        </div>
     </div>
 </div>
 {% endblock %}
