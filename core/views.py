@@ -1,4 +1,8 @@
 from django.contrib.auth import get_user_model
+def about(request):
+    return render(request, 'about.html')
+def home(request):
+    return render(request, 'home.html')
 
 def create_superuser(request):
     User = get_user_model()
